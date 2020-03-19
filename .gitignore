@@ -1,0 +1,3 @@
+# Project exclude paths
+/client/target/
+/com.example.service.service/target/
