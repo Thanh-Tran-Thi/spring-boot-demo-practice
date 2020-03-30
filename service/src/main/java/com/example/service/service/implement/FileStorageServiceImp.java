@@ -2,7 +2,6 @@ package com.example.service.service.implement;
 
 import com.example.service.config.FileStorageProperties;
 import com.example.service.exception.FileException;
-import com.example.service.exception.FileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -53,13 +52,20 @@ public class FileStorageServiceImp implements FileStorageService {
         f.createNewFile();
         FileOutputStream fileOutputStream = new FileOutputStream(f);
         fileOutputStream.write(file.getBytes());
-        fileOutputStream.close();
 
-        BufferedImage image = ImageIO.read(f);
+//        BufferedImage image = ImageIO.read(f);
+//        int width = image.getWidth();
+//        int height = image.getHeight();
+//        if ( width > 300 || height >300) {
+//            if (f.exists()) {
+//                f.delete();
+//            }
+//            throw new FileException(AppConstants.INVALID_FILE_DIMENSIONS);
+//        }
 
-        if (f.exists())
+        if (f.exists()) {
             f.delete();
-
+        }
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         try{
             if (fileName.contains(AppConstants.INVALID_FILE_DELIMITER)){
@@ -72,7 +78,10 @@ public class FileStorageServiceImp implements FileStorageService {
             return newFileName;
         } catch (IOException ex) {
             throw new FileException(String.format(AppConstants.FILE_STORAGE_EXCEPTION, fileName), ex);
+        } finally {
+            fileOutputStream.close();
         }
+
     }
 
     @Override
@@ -83,10 +92,10 @@ public class FileStorageServiceImp implements FileStorageService {
             if (resource.exists()){
                 return resource;
             } else {
-                throw new FileNotFoundException(AppConstants.FILE_NOT_FOUND + fileName);
+                throw new FileException(AppConstants.FILE_NOT_FOUND + fileName);
             }
         } catch (MalformedURLException ex) {
-            throw new FileNotFoundException(AppConstants.FILE_NOT_FOUND, ex);
+            throw new FileException(AppConstants.FILE_NOT_FOUND, ex);
         }
     }
 }
