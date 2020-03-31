@@ -2,7 +2,6 @@ package com.example.service.controller;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.service.entity.ApiResponse;
 import com.example.service.entity.Product;
 import org.modelmapper.ModelMapper;
@@ -38,14 +37,14 @@ public class ProductController {
 
     ModelMapper mapper = new ModelMapper();
 
-//    @GetMapping(value = AppConstants.PRODUCT_URI)
-//    public List<Product> listAllProducts(){
-//        return productService.listProducts();
-//    }
-
     @GetMapping
     public ApiResponse<List<Product>> listAll(){
         return new ApiResponse<List<Product>>(AppConstants.SUCCESS_CODE, AppConstants.CREATE_SUCCESS_MSG, productService.listProducts());
+    }
+
+    @GetMapping(value = "/{id}")
+    public Optional<Product> viewProduct(@PathVariable("id") Long id){
+        return productService.viewProduct(id);
     }
 
     @GetMapping(value = "/list")
@@ -69,6 +68,11 @@ public class ProductController {
     public HttpStatus deleteProductById(@PathVariable("id") Long id) {
         productService.deleteProductById(id);
         return HttpStatus.OK;
+    }
+
+    @DeleteMapping
+    public void deleteProductByIds(@RequestBody Long[] ids){
+        productService.deleteProductByIds(ids);
     }
 
     @GetMapping(value = AppConstants.DOWNLOAD_URI)

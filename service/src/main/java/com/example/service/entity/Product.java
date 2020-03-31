@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Setter
 @Entity
 @Table(name = "product")
-public class Product {
+public class Product extends Base{
 
     @Id
     @GeneratedValue
@@ -27,6 +27,9 @@ public class Product {
 
     @Column
     private String imagePath;
+
+    @Column
+    private int status;
 
     public Product(Long id, String name, double price, String description, String imagePath) {
         this.id = id;

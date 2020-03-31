@@ -9,15 +9,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.service.repository.ProductRepository;
 import com.example.service.service.ProductService;
-import org.springframework.ui.ModelMap;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductServiceImp implements ProductService {
-
-    private ModelMapper map = new ModelMapper();
 
     @Autowired
     private ProductRepository productRepository;
@@ -44,6 +43,7 @@ public class ProductServiceImp implements ProductService {
         }
     }
 
+
     @Override
     public List<Product> listProducts() {
         return productRepository.findAll();
@@ -56,10 +56,26 @@ public class ProductServiceImp implements ProductService {
             productRepository.deleteById(id);
     }
 
+    @Transactional
+    @Override
+    public void deleteProductByIds(Long[] ids) {
+        Arrays.asList(ids).forEach(i->{
+            productRepository.deleteById(i);
+        });
+//    for(int i =0 ; i < ids.length; i++){
+//
+//    }
+    }
+
     @Override
     public Page<Product> getAllProductsWithPagination(Pageable pageable) {
         Page<Product> productPage = repository.findAll(pageable);
         return productPage.map(product -> this.convertPagination(product));
+    }
+
+    @Override
+    public Optional<Product> viewProduct(Long id) {
+        return productRepository.findById(id);
     }
 
     private Product convertPagination(Product product) {
