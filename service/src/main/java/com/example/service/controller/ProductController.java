@@ -1,10 +1,10 @@
 package com.example.service.controller;
 
+import com.example.common.dto.ApiResponse;
+import com.example.common.dto.Paging;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.example.service.entity.ApiResponse;
 import com.example.service.entity.Product;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -14,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,7 +25,6 @@ import com.example.service.utils.AppConstants;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = AppConstants.PRODUCT_URI)
@@ -35,24 +35,31 @@ public class ProductController {
     @Autowired
     FileStorageService fileService;
 
-    ModelMapper mapper = new ModelMapper();
-
-    @GetMapping
-    public ApiResponse<List<Product>> listAll(){
-        return new ApiResponse<List<Product>>(AppConstants.SUCCESS_CODE, AppConstants.CREATE_SUCCESS_MSG, productService.listProducts());
-    }
+    public static final String PAGE = "0";
+    public static final String SIZE = "5";
 
     @GetMapping(value = "/{id}")
-    public Optional<Product> viewProduct(@PathVariable("id") Long id){
-        return productService.viewProduct(id);
+    public ApiResponse<?> viewProduct(@PathVariable("id") Long id){
+        return new ApiResponse<>(AppConstants.SUCCESS_CODE, "fg",productService.viewProduct(id), null);
     }
 
-    @GetMapping(value = "/list")
-    public ApiResponse<?> getAllProductsWithPagination(@RequestParam(name = "page", required = false, defaultValue = "0")  Integer page,
-                                                        @RequestParam(name = "size", required = false, defaultValue = "2") Integer size) {
+    @GetMapping
+    public ResponseEntity<?> getAllProducts(@RequestParam(name = "page", required = false, defaultValue = PAGE)  Integer page,
+                                                        @RequestParam(name = "size", required = false, defaultValue = SIZE) Integer size) {
         Pageable pageable = PageRequest.of(page,size);
         Page<Product> productList = productService.getAllProductsWithPagination(pageable);
-        return new ApiResponse<>(AppConstants.SUCCESS_CODE, "fg", productList);
+
+        ApiResponse<List<Product>> apiResponse = new ApiResponse<>();
+
+        apiResponse.setStatus(HttpStatus.OK.toString());
+        apiResponse.setMessage("get all page successful");
+        if (productList != null && !CollectionUtils.isEmpty(productList.getContent())) {
+            apiResponse.setResult(productList.getContent());
+            Paging metaData = new Paging(productList.getTotalPages(),
+                    productList.getTotalElements(), size, page, productList.isFirst(), productList.isLast());
+            apiResponse.setPaging(metaData);
+        }
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

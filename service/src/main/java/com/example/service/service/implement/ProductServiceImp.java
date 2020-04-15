@@ -43,13 +43,7 @@ public class ProductServiceImp implements ProductService {
         }
     }
 
-
-    @Override
-    public List<Product> listProducts() {
-        return productRepository.findAll();
-    }
-
-    @Override
+   @Override
     public void deleteProductById(Long id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent())
@@ -62,9 +56,6 @@ public class ProductServiceImp implements ProductService {
         Arrays.asList(ids).forEach(i->{
             productRepository.deleteById(i);
         });
-//    for(int i =0 ; i < ids.length; i++){
-//
-//    }
     }
 
     @Override

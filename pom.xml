@@ -12,7 +12,8 @@
 
     <modules>
         <module>client</module>
-        <module>com.example.service.service</module>
+        <module>service</module>
+        <module>common</module>
     </modules>
 
 </project>

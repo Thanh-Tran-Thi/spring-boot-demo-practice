@@ -53,16 +53,6 @@ public class FileStorageServiceImp implements FileStorageService {
         FileOutputStream fileOutputStream = new FileOutputStream(f);
         fileOutputStream.write(file.getBytes());
 
-//        BufferedImage image = ImageIO.read(f);
-//        int width = image.getWidth();
-//        int height = image.getHeight();
-//        if ( width > 300 || height >300) {
-//            if (f.exists()) {
-//                f.delete();
-//            }
-//            throw new FileException(AppConstants.INVALID_FILE_DIMENSIONS);
-//        }
-
         if (f.exists()) {
             f.delete();
         }

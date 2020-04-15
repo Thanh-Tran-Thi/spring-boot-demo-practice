@@ -10,8 +10,6 @@ import java.util.Optional;
 public interface ProductService {
     Product createOrUpdateProduct (Product product);
 
-    List<Product> listProducts();
-
     void deleteProductById (Long id);
 
     void deleteProductByIds (Long[] ids);

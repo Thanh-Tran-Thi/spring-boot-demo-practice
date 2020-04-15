@@ -17,10 +17,10 @@ public class AppConstants {
     public static final String PRODUCT_URI = "/products";
     public static final String PRODUCT_JSON_PARAM = "proJson";
     public static final String FILE_PARAM = "file";
-    public static final String DOWNLOAD_PATH = "/downloadFile/";
+    public static final String DOWNLOAD_PATH = "/products/downloadFile/";
     public static final String SUCCESS_CODE = "200";
     public static final String CREATE_SUCCESS_MSG = "Created successfully";
-    public static final String DOWNLOAD_URI = "/downloadFile/{fileName:.+}";
+    public static final String DOWNLOAD_URI = "/downloadFile/{fileName}";
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
     public static final String FILE_DOWNLOAD_HTTP_HEADER = "attachment; filename=\"%s\"";
 
