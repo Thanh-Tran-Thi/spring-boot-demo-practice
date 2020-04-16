@@ -1,7 +1,7 @@
 package com.example.service.controller;
 
-import com.example.common.dto.ApiResponse;
-import com.example.common.dto.Paging;
+import example.common.dto.ApiResponse;
+import example.common.dto.Paging;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.example.service.entity.Product;
